@@ -1,0 +1,462 @@
+/* =========================================================
+   حاسبة المعدل النقطي الشامل - نظام 4.00
+   تصميم بسيط، واضح، ومتجاوب باللغة العربية (RTL)
+   ========================================================= */
+
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --primary: #1b365d;
+  --accent: #0d9488;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --danger: #dc2626;
+  --radius: 14px;
+  --shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+
+/* الهيدر */
+.app-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #0f2544 100%);
+  color: #ffffff;
+  padding: 32px 0 38px;
+  margin-bottom: 24px;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.app-header h1 {
+  font-size: 1.9rem;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #cbd5e1;
+  font-size: 0.96rem;
+}
+
+/* التخطيط الرئيسي */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 22px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 22px;
+}
+
+.card h2 {
+  font-size: 1.18rem;
+  color: var(--primary);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.hint-tag {
+  background: #f1f5f9;
+  color: var(--muted);
+  font-size: 0.82rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* جدول المقررات */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.courses-table th {
+  text-align: right;
+  font-size: 0.86rem;
+  color: var(--muted);
+  padding: 10px 8px;
+  border-bottom: 2px solid var(--border);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.courses-table td {
+  padding: 9px 6px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.courses-table input,
+.courses-table select {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.93rem;
+  font-family: inherit;
+  background: #ffffff;
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.courses-table input:focus,
+.courses-table select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.14);
+}
+
+.courses-table input.input-error {
+  border-color: var(--danger);
+  background: #fef2f2;
+}
+
+/* المكافئ النقطي والتقدير الحرفي */
+.points-cell {
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--primary);
+  text-align: center;
+  display: inline-block;
+  min-width: 52px;
+}
+
+.grade-pill {
+  display: inline-block;
+  min-width: 48px;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: var(--muted);
+}
+
+.grade-pill.high {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.grade-pill.mid {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.grade-pill.cond {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.grade-pill.fail {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.delete-btn {
+  background: #fef2f2;
+  color: var(--danger);
+  border: 1px solid #fecaca;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+/* أزرار التحكم */
+.actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: transform 0.15s, background 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #0f766e;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid #fecaca;
+}
+
+.btn-outline:hover {
+  background: #fef2f2;
+}
+
+/* عمود النتائج */
+.results-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.gpa-display {
+  text-align: center;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 16px;
+  margin: 14px 0 16px;
+}
+
+.gpa-label {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.gpa-value {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.15;
+  margin: 6px 0 2px;
+}
+
+.gpa-scale {
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.rating-pill {
+  display: inline-block;
+  padding: 5px 16px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.rating-pill.excellent {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.rating-pill.good {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.rating-pill.pass {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.rating-pill.warning {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: #dbe3ee;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-box {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat-box.full-width {
+  grid-column: 1 / -1;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+/* بطاقة المعادلة */
+.info-card h3 {
+  font-size: 1rem;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.formula-text {
+  background: #f8fafc;
+  border-right: 4px solid var(--accent);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.small-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* جدول المرجع */
+.reference-card {
+  margin-bottom: 28px;
+}
+
+.reference-card summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1.02rem;
+}
+
+.reference-grids {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 18px;
+}
+
+.reference-grids h4 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.ref-table th,
+.ref-table td {
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  text-align: center;
+}
+
+.ref-table th {
+  background: #f1f5f9;
+  color: var(--primary);
+}
+
+/* الفوتر */
+.app-footer {
+  text-align: center;
+  padding: 16px 0 26px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* استجابة للشاشات الصغيرة */
+@media (max-width: 900px) {
+  .main-layout,
+  .reference-grids {
+    grid-template-columns: 1fr;
+  }
+}

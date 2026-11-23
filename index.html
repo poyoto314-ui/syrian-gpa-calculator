@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>حاسبة المعدل النقطي الشامل | نظام 4.00</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="container">
+      <span class="badge">نظام الساعات المعتمدة (4.00)</span>
+      <h1>حاسبة المعدل النقطي الشامل</h1>
+      <p class="subtitle">
+        أدخل جميع مقرراتك الدراسية مع عدد ساعاتها والدرجة الصحيحة من 100 لحساب معدلك النقطي التراكمي بدقة
+      </p>
+    </div>
+  </header>
+
+  <main class="container main-layout">
+    <!-- جدول إدخال المقررات -->
+    <section class="card">
+      <div class="card-header">
+        <h2>قائمة المقررات الدراسية</h2>
+        <span class="hint-tag">الدرجات أعداد صحيحة فقط (0 – 100)</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="courses-table">
+          <thead>
+            <tr>
+              <th>اسم المقرر</th>
+              <th style="width: 115px;">الساعات</th>
+              <th style="width: 135px;">الدرجة (من 100)</th>
+              <th style="width: 105px;">المكافئ</th>
+              <th style="width: 95px;">التقدير</th>
+              <th style="width: 52px;">حذف</th>
+            </tr>
+          </thead>
+          <tbody id="coursesBody">
+            <!-- تُضاف الصفوف عبر JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions-bar">
+        <button type="button" id="addCourseBtn" class="btn btn-primary">+ إضافة مقرر</button>
+        <button type="button" id="loadSampleBtn" class="btn btn-secondary">تعبئة مثال تجريبي</button>
+        <button type="button" id="resetBtn" class="btn btn-outline">مسح الكل</button>
+      </div>
+    </section>
+
+    <!-- بطاقة النتيجة النهائية -->
+    <aside class="results-column">
+      <section class="card results-card">
+        <h2>نتيجة المعدل النقطي</h2>
+
+        <div class="gpa-display">
+          <span class="gpa-label">المعدل النقطي الشامل (GPA)</span>
+          <div class="gpa-value" id="totalGpa">0.00</div>
+          <div class="gpa-scale">من أصل 4.00</div>
+          <div class="rating-pill" id="overallRating">بانتظار إدخال الدرجات</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="gpaProgressBar"></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-label">عدد المقررات المحتسبة</span>
+            <strong class="stat-value" id="coursesCount">0</strong>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">مجموع الساعات</span>
+            <strong class="stat-value" id="totalCredits">0</strong>
+          </div>
+          <div class="stat-box full-width">
+            <span class="stat-label">مجموع النقاط (المكافئ × الساعات)</span>
+            <strong class="stat-value" id="totalPoints">0.00</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="card info-card">
+        <h3>طريقة الحساب المعتمدة</h3>
+        <p class="formula-text">
+          المعدل النقطي = مجموع (المكافئ النقطي × عدد الساعات) ÷ مجموع الساعات المعتمدة
+        </p>
+        <p class="small-note">
+          الحد الأدنى للمعدل النقطي المطلوب للتخرج هو <strong>2.00</strong> نقطة (تقدير مقبول).
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <!-- جدول سلم التحويل المرجعي -->
+  <section class="container">
+    <details class="card reference-card">
+      <summary>عرض جدول تحويل الدرجات والتقديرات المعتمد</summary>
+      <div class="reference-grids">
+        <div>
+          <h4>سلم تحويل العلامات (أعداد صحيحة)</h4>
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th>الدرجة من 100</th>
+                <th>المكافئ النقطي</th>
+                <th>التقدير</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>98 – 100</td><td>4.00</td><td>A+</td></tr>
+              <tr><td>95 – 97</td><td>3.75</td><td>A</td></tr>
+              <tr><td>90 – 94</td><td>3.50</td><td>A-</td></tr>
+              <tr><td>85 – 89</td><td>3.25</td><td>B+</td></tr>
+              <tr><td>80 – 84</td><td>3.00</td><td>B</td></tr>
+              <tr><td>75 – 79</td><td>2.75</td><td>B-</td></tr>
+              <tr><td>70 – 74</td><td>2.50</td><td>C+</td></tr>
+              <tr><td>65 – 69</td><td>2.25</td><td>C</td></tr>
+              <tr><td>60 – 64</td><td>2.00</td><td>C-</td></tr>
+              <tr><td>55 – 59</td><td>1.75</td><td>D+</td></tr>
+              <tr><td>50 – 54</td><td>1.50</td><td>D</td></tr>
+              <tr><td>أقل من 50</td><td>0.00</td><td>F</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <h4>التقدير العام للمعدل النقطي</h4>
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th>المعدل النقطي</th>
+                <th>التقدير العام</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>3.75 – 4.00</td><td>شرف</td></tr>
+              <tr><td>3.25 – 3.74</td><td>امتياز</td></tr>
+              <tr><td>2.75 – 3.24</td><td>جيد جداً</td></tr>
+              <tr><td>2.25 – 2.74</td><td>جيد</td></tr>
+              <tr><td>2.00 – 2.24</td><td>مقبول</td></tr>
+              <tr><td>أقل من 2.00</td><td>إنذار أكاديمي</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <footer class="app-footer">
+    <div class="container">
+      <p>حاسبة المعدل النقطي الشامل — مشروع تطبيق ويب (HTML / CSS / JavaScript)</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
